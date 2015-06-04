@@ -1,23 +1,27 @@
 package com.test.test;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
+import android.support.v4.app.FragmentActivity;
+import static org.robolectric.util.SupportFragmentTestUtil.startFragment;
+import static org.robolectric.util.SupportFragmentTestUtil.startVisibleFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class MainFragmentTest {
   private MainFragment subject;
 
-  @Before
-  public void setUp() throws Exception {
-    subject = new MainFragment();
+  @Test
+  public void test() {
+    MainFragment fragment = new MainFragment();
+    startFragment(fragment, FragmentActivity.class);
   }
 
   @Test
-  public void test() {
-    FragmentManagerHelper.startVisibleFragmentAndAddToBackStack(subject);
+  public void test2() {
+    MainFragment fragment = new MainFragment();
+    startVisibleFragment(fragment);
   }
 }
