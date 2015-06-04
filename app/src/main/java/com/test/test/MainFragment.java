@@ -22,15 +22,10 @@ public class MainFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     pager = ((ViewPager) view.findViewById(R.id.pager));
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
 
     doSomething();
   }
-
+  
   private void doSomething() {
     MyAdapter adapter = new MyAdapter(getChildFragmentManager());
     pager.setAdapter(adapter);
@@ -49,7 +44,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public int getCount() {
-      return 3;
+      return 1;
     }
   }
 }
