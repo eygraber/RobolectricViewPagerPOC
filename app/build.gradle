@@ -1,0 +1,91 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath group: 'org.robolectric', name: 'robolectric-gradle-plugin', version: '1.0.0'
+  }
+}
+
+repositories {
+  mavenCentral()
+  maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'org.robolectric'
+
+android {
+  compileSdkVersion 21
+  buildToolsVersion "21.1.2"
+  defaultConfig {
+    applicationId 'com.test.test'
+    minSdkVersion 17
+    targetSdkVersion 21
+    versionCode 1
+    versionName "1.0"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  productFlavors {
+  }
+}
+
+robolectric {
+  include '**/*Test.class'
+  exclude '**/espresso/**/*.class'
+  maxHeapSize = "2048m"
+  jvmArgs '-XX:MaxPermSize=1024m', '-XX:-UseSplitVerifier', '-Xmx2048m', '-XX:+HeapDumpOnOutOfMemoryError'
+
+  // Specify max number of processes (default is 1)
+  maxParallelForks = 4
+
+  // Specify max number of test classes to execute in a test process
+  forkEvery = 100
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile 'com.android.support:appcompat-v7:22.0.0'
+  testCompile 'junit:junit:4.12'
+  testCompile('org.robolectric:robolectric:3.0-SNAPSHOT') {
+    exclude module: 'classworlds'
+    exclude module: 'commons-logging'
+    exclude module: 'httpclient'
+    exclude module: 'maven-artifact'
+    exclude module: 'maven-artifact-manager'
+    exclude module: 'maven-error-diagnostics'
+    exclude module: 'maven-model'
+    exclude module: 'maven-project'
+    exclude module: 'maven-settings'
+    exclude module: 'plexus-container-default'
+    exclude module: 'plexus-interpolation'
+    exclude module: 'plexus-utils'
+    exclude module: 'support-v4'
+    exclude module: 'wagon-file'
+    exclude module: 'wagon-http-lightweight'
+    exclude module: 'wagon-provider-api'
+  }
+  testCompile 'org.powermock:powermock-module-junit4:1.6.1'
+  testCompile 'org.powermock:powermock-api-mockito:1.6.1'
+  testCompile('com.squareup:fest-android:1.0.+') {
+    exclude group: 'com.android.support'
+  }
+}
+
+task(androidStudioOneDotOneHack) {
+  File fromFile = new File(getRootDir(), "app/src/test/resources/org.robolectric.Config.properties")
+  File toFile = new File(getRootDir(), "app/build/intermediates/classes/test/debug/org.robolectric.Config.properties")
+  toFile.mkdirs()
+  Files.copy(fromFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+}
+
+androidStudioOneDotOneHack
