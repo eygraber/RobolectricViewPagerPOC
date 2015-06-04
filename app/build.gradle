@@ -7,7 +7,7 @@ buildscript {
   }
 
   dependencies {
-    classpath group: 'org.robolectric', name: 'robolectric-gradle-plugin', version: '1.0.0'
+    classpath group: 'org.robolectric', name: 'robolectric-gradle-plugin', version: '1.1.0'
   }
 }
 
@@ -21,7 +21,7 @@ apply plugin: 'org.robolectric'
 
 android {
   compileSdkVersion 21
-  buildToolsVersion "21.1.2"
+  buildToolsVersion "22.0.1"
   defaultConfig {
     applicationId 'com.test.test'
     minSdkVersion 17
@@ -39,24 +39,11 @@ android {
   }
 }
 
-robolectric {
-  include '**/*Test.class'
-  exclude '**/espresso/**/*.class'
-  maxHeapSize = "2048m"
-  jvmArgs '-XX:MaxPermSize=1024m', '-XX:-UseSplitVerifier', '-Xmx2048m', '-XX:+HeapDumpOnOutOfMemoryError'
-
-  // Specify max number of processes (default is 1)
-  maxParallelForks = 4
-
-  // Specify max number of test classes to execute in a test process
-  forkEvery = 100
-}
-
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   compile 'com.android.support:appcompat-v7:22.0.0'
   testCompile 'junit:junit:4.12'
-  testCompile('org.robolectric:robolectric:3.0-SNAPSHOT') {
+  testCompile('org.robolectric:robolectric:3.0-rc3') {
     exclude module: 'classworlds'
     exclude module: 'commons-logging'
     exclude module: 'httpclient'
@@ -81,11 +68,3 @@ dependencies {
   }
 }
 
-task(androidStudioOneDotOneHack) {
-  File fromFile = new File(getRootDir(), "app/src/test/resources/org.robolectric.Config.properties")
-  File toFile = new File(getRootDir(), "app/build/intermediates/classes/test/debug/org.robolectric.Config.properties")
-  toFile.mkdirs()
-  Files.copy(fromFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-}
-
-androidStudioOneDotOneHack
